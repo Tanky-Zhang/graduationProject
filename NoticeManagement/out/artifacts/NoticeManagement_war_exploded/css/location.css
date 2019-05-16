@@ -1,0 +1,323 @@
+/*		body{
+			font-size:0px; 
+		}
+		div{
+			position: absolute;
+		}
+		#myDiv{
+			border: 1px solid black;
+			width:185mm;
+			height: 262mm;
+			padding-left: 10mm;
+			padding-top: 24mm;
+			padding-bottom: 15mm;
+			margin-top: 25mm;
+		}
+		#inner{
+			border: 1px solid red;
+			width: 168mm;
+			height: 221mm;
+		}
+		*/
+		body{
+			width: 187mm;
+			height: 264mm 
+		}
+		div{
+			position: absolute;
+		}
+		#myDiv{
+			width:187mm;
+			height: 264mm;
+		}
+		#inner{
+			border: 1px solid red;
+			width: 168mm;
+			height: 221mm;
+			margin: 24mm 7mm 15mm 10mm;
+		}
+		#Host_Institution{
+			font-size:12px;
+			width:78mm;
+			height:6mm;
+			margin-top:3mm;
+			margin-left:90mm;
+		}
+		#host_institution{
+			width: 76mm;
+			height: 5mm;
+		}
+		#Name{
+			width: 22mm;
+			height: 6mm;
+			margin-left: 22mm;
+			margin-top: 15mm;
+		}
+		#name{
+			width: 21mm;
+			height: 5mm;
+		}
+		#Family_Name{
+			width: 40mm;
+			height: 6mm;
+			margin-left: 55mm;
+			margin-top: 16mm;
+		}
+		#family_name{
+			width: 38mm;
+			height: 5mm;
+		}
+		#Given_Name{
+			width: 55mm;
+			height: 6mm;
+			margin-left: 100mm;
+			margin-top: 16mm;
+		}
+		#given_name{
+			width: 53mm;
+			height: 5mm;
+		}
+		#Nationality{
+			width: 25mm;
+			height: 6mm;
+			margin-left: 20mm;
+			margin-top: 29mm;
+		}
+		#nationality{
+			width: 23mm;
+			height: 5mm;
+		}
+		#Passport_No{
+			width: 35mm;
+			height: 6mm;
+			margin-left: 55mm;
+			margin-top: 29mm;
+		}
+		#passport_no{
+			width: 34mm;
+			height: 5mm;
+		}
+		#Sex{
+			width: 15mm;
+			height: 6mm;
+			margin-left: 105mm;
+			margin-top: 29mm;
+		}
+		#sex{
+			width: 14mm;
+			height: 5mm;
+		}
+		#Marital_Status{
+			width: 15mm;
+			height: 6mm;
+			margin-left: 140mm;
+			margin-top: 29mm;
+		}
+		#marital_status{
+			width: 14mm;
+			height: 5mm;
+		}
+		#B_Y{
+			width: 12mm;
+			height: 6mm;
+			margin-left: 30mm;
+			margin-top: 40mm;
+		}
+		#B_M{
+			width: 12mm;
+			height: 6mm;
+			margin-left: 52mm;
+			margin-top: 40mm;
+		}
+		#B_D{
+			width: 12mm;
+			height: 6mm;
+			margin-left:70mm;
+			margin-top: 40mm;
+		}
+		#b_y{
+			width: 11mm;
+			height: 5mm;
+		}
+		#b_m{
+			width: 11mm;
+			height: 5mm;
+		}
+		#b_d{
+			width: 11mm;
+			height: 5mm;
+		}
+		#Place_of_Birth{
+			width: 60mm;
+			height: 6mm;
+			margin-left: 100mm;
+			margin-top: 42mm;
+		}
+		#place_of_birth{
+			width: 60mm;
+			height: 5mm;
+		}
+		#Home_Add_Tel{
+			width: 90mm;
+			height: 6mm;
+			margin-left: 75mm;
+			margin-top: 50mm;
+		}
+		#home_add_tel{
+			width: 89mm;
+			height: 5mm;
+		}
+		#Highest_Academic{
+			width: 50mm;
+			height: 6mm;
+			margin-left: 30mm;
+			margin-top: 63mm;
+		}
+		#highest_academic{
+			width: 49mm;
+			height: 5mm;
+		}
+		#Occupation{
+			width: 30mm;
+			height: 6mm;
+			margin-left: 110mm;
+			margin-top: 63mm;
+		}
+		#occupation{
+			width: 29mm;
+			height: 5mm;
+		}
+		#Employer_or_Institution{
+			width: 60mm;
+			height: 6mm;
+			margin-left: 95mm;
+			margin-top: 73mm;
+		}
+		#employer_or_institution{
+			width: 59mm;
+			height: 5mm;
+		}
+		#Field_of_Study{
+			width: 60mm;
+			height: 6mm;
+			margin-left: 20mm;
+			margin-top: 85mm;
+		}
+		#field_of_study{
+			width: 59mm;
+			height: 5mm;
+		}
+		#D_Y{
+			width: 10mm;
+			height: 6mm;
+			margin-left: 125mm;
+			margin-top: 82mm;
+		}
+		#D_M{
+			width: 5mm;
+			height: 6mm;
+			margin-left: 138mm;
+			margin-top: 82mm;
+		}
+		#DS_Y{
+			width: 8mm;
+			height: 6mm;
+			margin-left: 150mm;
+			margin-top: 82mm;
+		}
+		#DS_M{
+			width: 5mm;
+			height: 6mm;
+			margin-left: 161mm;
+			margin-top: 82mm;
+		}
+		#d_y{
+			width: 7mm;
+			height: 5mm;
+		}
+		#ds_y{
+			width: 8mm;
+			height: 5mm;
+		}
+		#d_m{
+			width: 4mm;
+			height: 5mm;
+		}
+		#ds_m{
+			width: 4mm;
+			height: 5mm;
+		}
+		#Student_Status{
+			width: 35mm;
+			height: 6mm;
+			margin-left: 55mm;
+			margin-top: 97mm;
+		}
+		#student_status{
+			width: 34mm;
+			height: 5mm;
+		}
+		#R_Y{
+			width: 8mm;
+			height: 6mm;
+			margin-left: 112mm;
+			margin-top: 99mm;
+		}
+		#R_M{
+			width: 8mm;
+			height: 6mm;
+			margin-left: 130mm;
+			margin-top: 99mm;
+		}
+		#R_D{
+			width: 8mm;
+			height: 6mm;
+			margin-left: 147mm;
+			margin-top: 99mm;
+		}
+		#r_y{
+			width: 7mm;
+			height: 5mm;
+		}
+		#r_m{
+			width: 7mm;
+			height: 5mm;
+		}
+		#r_d{
+			width: 7mm;
+			height: 5mm;
+		}
+		#Reference_Tel{
+			width: 90mm;
+			height: 6mm;
+			margin-left: 73mm;
+			margin-top: 106mm;
+		}
+		#reference_tel{
+			width: 89mm;
+			height: 5mm;
+		}
+		#Guarantor{
+			width: 70mm;
+			height: 6mm;
+			margin-left: 92mm;
+			margin-top: 115mm;
+		}
+		#guarantor{
+			width: 69mm;
+			height: 5mm;
+		}
+		#Financial{
+			width: 55mm;
+			height: 6mm;
+			margin-left: 110mm;
+			margin-top: 132mm;
+		}
+		#financial{
+			width: 54mm;
+			height: 5mm;
+		}
+		input{
+			autocomplete="off";
+			border: 1px solid black;
+		}

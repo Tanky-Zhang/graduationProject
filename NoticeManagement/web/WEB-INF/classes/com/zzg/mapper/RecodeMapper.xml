@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zzg.mapper.RecodeMapper">
+
+    <select id="getList" parameterType="String" resultType="map">
+        SELECT
+        ID,
+        SNAME,
+        NATIONALITY,
+        BIRTH,
+        FIELD_OF_STUDY,
+        SEX,
+        PASSPORT,
+        ADDRESS
+        FROM
+        MESSAGE
+
+        <where>
+            <if test="name!=null and name!=''">
+                SNAME LIKE CONCAT('%',#{name},'%')
+            </if>
+        </where>
+
+        LIMIT #{start},#{pageSize}
+
+    </select>
+    <!--获取总条数-->
+    <select id="getCount" resultType="int">
+        SELECT
+            COUNT(1)
+        FROM
+            MESSAGE
+    </select>
+
+    <!--插入学生信息-->
+
+    <insert id="saveMessage" parameterType="map">
+        INSERT
+            INTO
+            MESSAGE(
+            ID,
+            SNUMBER,
+            PTEL,
+            STEL,
+            SNAME,
+            FAMILYNAME,/*1*/
+            SEX,
+            ISMATCHED,/*1*/
+            GIVENNAME,/*1*/
+            PASSPORT,/**/
+            BIRTH,/*1*/
+            PBIRTH,/*1*/
+            NATIONALITY,
+            ADDRESS,
+            FIELD_OF_STUDY,
+            EMPLOYER_OR_INSTITUTION,
+            STADURATION,/**/
+            ENDDURATION,
+            SUPPORT,
+            HOSTINSTITUTION,/*1*/
+            RTEL,
+            SOURCEOFMONEY)
+            VALUES(
+            #{ID},
+            #{SNUMBER},/*1*/
+            #{PTEL},
+            #{STEL},
+            #{SNAME},
+            #{FAMILYNAME},
+            #{SEX},
+            #{ISMATCHED},
+            #{GIVENNAME},
+            #{PASSPORT},
+            #{BIRTH},
+            #{PBIRTH},
+            #{NATIONALITY},
+            #{ADDRESS},
+            #{FIELD_OF_STUDY},
+            #{EMPLOYER_OR_INSTITUTION},
+            #{STADURATION},
+            #{ENDDURATION},
+            #{SUPPORT},
+            #{HOSTINSTITUTION},
+            #{RTEL},
+            #{SOURCEOFMONEY})/*1*/
+    </insert>
+
+    <!--删除学生信息-->
+    <delete id="delMessage" parameterType="String">
+
+        DELETE FROM
+             MESSAGE
+        WHERE
+            ID
+        IN
+        <foreach collection="array" separator="," open="(" close=")" item="ids">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--获取留学生信息-->
+    <select id="getMessage" parameterType="String" resultType="map">
+        SELECT
+            ID,
+            SNUMBER,
+            PTEL,
+            STEL,
+            SNAME,
+            FAMILYNAME,
+            SEX,
+            ISMATCHED,
+            GIVENNAME,
+            PASSPORT,
+            BIRTH,
+            PBIRTH,
+            NATIONALITY,
+            ADDRESS,
+            FIELD_OF_STUDY,
+            EMPLOYER_OR_INSTITUTION,
+            STADURATION,
+            ENDDURATION,
+            SUPPORT,
+            HOSTINSTITUTION,
+            RTEL,
+            SOURCEOFMONEY
+        FROM
+            MESSAGE
+        WHERE
+            ID=#{sid}
+    </select>
+
+    <!--修改留学生信息-->
+    <update id="editMessage" parameterType="map">
+        UPDATE
+            MESSAGE
+        SET
+            SNUMBER=#{SNUMBER},
+            PTEL=#{PTEL},
+            STEL=#{STEL},
+            SNAME=#{SNAME},
+            FAMILYNAME=#{FAMILYNAME},
+            SEX=#{SEX},
+            ISMATCHED=#{ISMATCHED},
+            GIVENNAME=#{GIVENNAME},
+            PASSPORT=#{PASSPORT},
+            BIRTH=#{BIRTH},
+            PBIRTH=#{PBIRTH},
+            NATIONALITY=#{NATIONALITY},
+            ADDRESS=#{ADDRESS},
+            FIELD_OF_STUDY=#{FIELD_OF_STUDY},
+            EMPLOYER_OR_INSTITUTION=#{EMPLOYER_OR_INSTITUTION},
+            STADURATION=#{STADURATION},
+            ENDDURATION=#{ENDDURATION},
+            SUPPORT=#{SUPPORT},
+            HOSTINSTITUTION=#{HOSTINSTITUTION},
+            RTEL=#{RTEL},
+            SOURCEOFMONEY=#{SOURCEOFMONEY}
+        WHERE
+           ID=#{ID}
+    </update>
+
+    <!--通过id获取打印学生的信息-->
+    <select id="getStudentByid" parameterType="String" resultType="map">
+      SELECT
+         ID,
+         SNAME,
+         HOSTINSTITUTION,
+         FIELD_OF_STUDY
+      FROM
+         MESSAGE
+      WHERE
+         ID=#{sid}
+    </select>
+
+</mapper>
