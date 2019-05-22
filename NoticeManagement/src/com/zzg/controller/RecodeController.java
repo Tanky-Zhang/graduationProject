@@ -68,7 +68,7 @@ public class RecodeController {
 
             String uuid = UUID.randomUUID().toString();
 
-            uuid.replace("-", "");
+            uuid.replaceAll("-", "");
 
             map.put("ID", uuid);
             recodeService.saveMessage(map);

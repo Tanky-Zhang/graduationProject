@@ -23,19 +23,36 @@
     <!-- Javascript -->
     <script src="<%=basePath%>js/Login/scripts.js"></script>
 
-</head>
+    <style>
+     .login {
 
+         width: 150px !important;
+
+     }
+    </style>
+
+</head>
 <body>
 <div class="page-container">
     <h1>留学生入学通知书管理系统</h1>
     <form action="${pageContext.request.contextPath }/user/login.action" method="post">
         <input type="text" name="userName" class="username" placeholder="Username" id="username">
         <input type="password" name="passWord" class="password" placeholder="Password" id="password">
-        <button type="submit" id="sub_btn">登录</button>
+        <div>
+        <button type="submit" id="sub_btn" class="login">登录</button>
+            <button type="button" id="reg_btn" class="login">注册</button>
+        </div>
     </form>
+
 </div>
 
 <script>
+
+    $("#reg_btn").click(function () {
+
+        window.location.href = "${pageContext.request.contextPath }/user/showRegist.action";
+
+    })
 </script>
 </body>
 </html>

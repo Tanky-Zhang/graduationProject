@@ -14,6 +14,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         HttpSession session=httpServletRequest.getSession();
 
+        String url = httpServletRequest.getRequestURL().toString();
+
         Map userMap = (Map)session.getAttribute("loginUser");
 
         if (userMap==null){

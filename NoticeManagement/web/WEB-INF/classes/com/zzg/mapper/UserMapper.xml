@@ -31,6 +31,25 @@
             AND
             U.USERNAME=#{USERNAME}
     </select>
+    
+    <select id="getUserName" resultType="String" parameterType="String">
+        SELECT
+           USERNAME
+        FROM
+           T_USER
+        WHERE
+           USERNAME=#{username}
 
+    </select>
+    
+    <insert id="registUser" parameterType="map">
+
+        INSERT INTO
+                T_USER
+               (USERID,USERNAME,PASSWORD,ROLEID)
+                VALUES
+               (#{ID},#{USERNAME},#{PASSWORD},'admin')/*默认是admin的角色*/
+
+    </insert>
 
 </mapper>

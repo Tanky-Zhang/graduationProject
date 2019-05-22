@@ -27,6 +27,12 @@
 
 			<mvc:exclude-mapping path="/user/login.action"/> <!--去到验证登陆的页面-->
 
+			<mvc:exclude-mapping path="/user/showRegist.action"/><!--去到注册的页面-->
+
+			<mvc:exclude-mapping path="/user/getuserName.action"/><!--获取用户名的页面-->
+
+			<mvc:exclude-mapping path="/user/registUser.action"/>
+
 			<bean class="com.zzg.controller.filter.LoginInterceptor"/>
 
 		</mvc:interceptor>

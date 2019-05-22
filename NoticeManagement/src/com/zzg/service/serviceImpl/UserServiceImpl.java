@@ -5,6 +5,7 @@ import com.zzg.mapper.UserMapper;
 import com.zzg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -36,6 +37,20 @@ public class UserServiceImpl implements UserService {
             }
 
         }
+
+    }
+
+    public String getUserName(String username){
+
+        return  userMapper.getUserName(username);
+
+    }
+
+    @Override
+    @Transactional
+    public void registUser(Map map) {
+
+        userMapper.registUser(map);
 
     }
 }

@@ -22,6 +22,8 @@ jQuery(document).ready(function() {
             });
             return false;
         }
+
+
     });
 
     $('.page-container form .username, .page-container form .password').keyup(function(){

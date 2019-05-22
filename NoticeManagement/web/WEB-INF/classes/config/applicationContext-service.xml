@@ -27,9 +27,12 @@
 				/images/** = anon
 				/index.jsp=anon
 				/Login = anon
-				/WEB-INF/jsp/recod.jsp=anon
+				/regist=anon
 				/user/login.action = anon
+				/user/showRegist.action=anon
 				/user/home.action = anon
+				/user/getuserName.action=anon
+				/user/registUser.action=anon
 				/recode/deleMessage.action = perms["delete-resource"]<!--权限控制-->
 				/recode/saveMessage.action = perms["save-resource"]<!--权限控制-->
 				/recode/editMessage.action = perms["edit-resource"]<!--权限控制-->
