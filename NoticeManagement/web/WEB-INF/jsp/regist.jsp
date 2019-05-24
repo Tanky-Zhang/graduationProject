@@ -169,7 +169,7 @@
 
             if (password==""||password==null){
 
-                toastr.warning('用户名不能为空！');
+                toastr.warning('密码不能为空！');
 
                 return 0;
 
@@ -180,7 +180,7 @@
             if (repassword==""||repassword==null){
 
 
-                toastr.warning('用户名不能为空！');
+                toastr.warning('请确认密码！');
 
                 return 0;
 

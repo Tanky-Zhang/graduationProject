@@ -19,11 +19,18 @@
     <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-table-zh-CN.js"></script>
     <link href="${pageContext.request.contextPath }/bootstrap/css/bootstrap-table.css" rel="stylesheet">
     <%--引入文件下载的css以及js--%>
-  <%--  <script src="${pageContext.request.contextPath }/js/recode/xlsx.core.min.js"></script>
-    <script src="${pageContext.request.contextPath }/js/recode/blob.js"></script>
-    <script src="${pageContext.request.contextPath }/js/recode/FileSaver.min.js"></script>
+    <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+
+    <%--导出的js文件--%>
+    <script src="${pageContext.request.contextPath }/bootstrap/js/tableExport.js"></script>
     <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-table-export.js"></script>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/tableExport.min.js"></script>--%>
+    <script src="${pageContext.request.contextPath }/bootstrap/js/xlsx.core.min.js"></script>
+    <script src="${pageContext.request.contextPath }/bootstrap/js/FileSaver.min.js"></script>
+    <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+    <script src="${pageContext.request.contextPath }/bootstrap/js/base64.js"></script>
+
+
+
     <%--引入弹出模态框的js文件--%>
     <%-- <script src="${pageContext.request.contextPath }/bootstrap/js/modal.js"></script>--%>
     <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-modalmanager.js"></script>
@@ -40,9 +47,9 @@
     <style type="text/css">
         .container-fluid {
 
-            height: 150px;
+            height: 130px;
 
-            background-color: rgba(149, 57, 229, 0.15);
+            /*background-color: rgba(149, 57, 229, 0.15);*/
 
         }
 
@@ -76,8 +83,30 @@
         .dropup .dropdown-menu{
             bottom: auto;
         }
+        #updatePassForm{
+
+            padding-left: 135px;
+
+        }
+        .toast-center-center {
+            margin-top: -217px !important;
+        }
+
+        .float-right{
+            float: right;
+            margin-top: -45px !important;
+        }
+
+        a{
+            display: inherit;
+            padding: 4px 5px;
+        }
     </style>
     <script>
+
+        var pageNumber=1;
+        var pageSize=10;
+
         var columns = [
             {
                 checkbox: true,
@@ -91,7 +120,9 @@
                 halign: 'center',
                 width: 50,
                 formatter: function (value, row, index) {
-                    return index + 1;
+
+                    return (pageNumber-1)*pageSize+index+1;
+
                 }
             },
             {
@@ -155,8 +186,90 @@
 
                 }
             }];
+
+        function initTabel(){
+
+            $('#student-table').bootstrapTable('destroy');
+
+            $('#student-table').bootstrapTable({
+
+                url: '${pageContext.request.contextPath }/recode/getList.action',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                contentType: "application/x-www-form-urlencoded",
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                pagination:true,
+                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                //strictSearch: true,
+                showColumns: true,                 //是否显示所有的列
+                smartDisplay: false,
+                //showRefresh: true,                  //是否显示刷新按钮
+                //minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                //height: 30,                        //行高，如果没有设置height属性，表格自动根据记录条数表格高度
+                uniqueId: "ID",                    //每一行的唯一标识，一般为主键列
+                strictSearch: true,
+                // showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                // cardView: false,                    //是否显示详细视图
+                //detailView: false,                   //是否显示父子表
+                //showExport: true,                     //是否显示导出
+                // exportDataType: "all",              //basic', 'all', 'selected'.
+                columns: columns,
+                paginationLoop: false,
+                /*  onPageChange:function(number, size){
+                      pageNumber=number;
+                      pageSize=size;
+                  },*/
+                queryParams: function (params) {
+
+                    console.log(params);
+
+                    /*pageNumber=(params.offset/params.limit)+1;//将页码和每页的条数赋给全局变量用于展示序号
+
+                    pageSize= params.limit ;// 每页显示数量*/
+
+                    var temp = {
+
+                        stuName: $("#searchName").val(),
+                       // numStart: numStart,   //当前页码
+                        pageSize :params.limit, // 每页显示数量
+                        pageOffset :params.offset // 每页显示数量
+
+                    }
+
+                    return temp;
+
+                },          //传递参数（*）
+                //paginationLoop: true,
+                //export: 'glyphicon-export icon-share',
+                showExport: true,              //是否显示导出按钮(此方法是自己写的目的是判断终端是电脑还是手机,电脑则返回true,手机返回falsee,手机不显示按钮)
+                exportDataType: "all",              //basic', 'all', 'selected'.
+                exportTypes:['excel','xlsx'],	    //导出类型
+                exportButton: $('#btn_export'),     //为按钮btn_export  绑定导出事件  自定义导出按钮(可以不用)
+                exportOptions:{
+                    ignoreColumn: [0,0],            //忽略某一列的索引
+                    fileName: '数据导出',              //文件名称设置
+                    worksheetName: 'Sheet1'          //表格工作区名称
+                    //tableName: '商品数据表',
+                    //excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+                    //onMsoNumberFormat: DoOnMsoNumberFormat
+                }
+                //导出excel表格设置<<<<<<<<<<<<<<<
+
+            });
+
+        }
         $(function () {
 
+            initTabel();
 
             //初始化弹框
             toastr.options = {
@@ -180,60 +293,28 @@
             //2.初始化Button的点击事件
             /*var oButtonInit = new ButtonInit();
             oButtonInit.Init();*/
-            $('#student-table').bootstrapTable({
 
-                url: '${pageContext.request.contextPath }/recode/getList.action',         //请求后台的URL（*）
-                method: 'post',                      //请求方式（*）
-                contentType: "application/x-www-form-urlencoded",
-                toolbar: '#toolbar',                //工具按钮用哪个容器
-                striped: true,                      //是否显示行间隔色
-                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-                pagination: true,                   //是否显示分页（*）
-                sortable: false,                     //是否启用排序
-                sortOrder: "asc",                   //排序方式
-                queryParams: function (params) {
-
-                    var temp = {
-
-                        stuName: $("#searchName").val()
-
-                    }
-
-                    return temp;
-
-                },          //传递参数（*）
-                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
-                pageNumber: 1,                       //初始化加载第一页，默认第一页
-                pageSize: 10,                       //每页的记录行数（*）
-                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
-                //strictSearch: true,
-                showColumns: true,                 //是否显示所有的列
-                smartDisplay: false,
-                //showRefresh: true,                  //是否显示刷新按钮
-                //minimumCountColumns: 2,             //最少允许的列数
-                clickToSelect: true,                //是否启用点击选中行
-                //height: 30,                        //行高，如果没有设置height属性，表格自动根据记录条数表格高度
-                uniqueId: "ID",                    //每一行的唯一标识，一般为主键列
-                strictSearch: true,
-                // showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
-                // cardView: false,                    //是否显示详细视图
-                //detailView: false,                   //是否显示父子表
-                //showExport: true,                     //是否显示导出
-                // exportDataType: "all",              //basic', 'all', 'selected'.
-                columns: columns,
-                /* onPageChange:function(number, size){/!*pn= number ; pz = size*!/}*/
-                paginationLoop: false,
-            });
 
             $("#queryButton").click(function () {
 
-                $('#student-table').bootstrapTable('refresh');
+                //$('#student-table').bootstrapTable({pageNumber:1,pageSize:10});
+
+                initTabel();
+
+               /* $('#student-table').bootstrapTable('refresh',{
+
+
+                    url:'/recode/getList.action'
+
+
+                });*///'destroy',
 
             })
 
 
         });
+
+
         //初始化时间控件
         /* $(function () {
              var picker1 = $('#datetimepicker1').datetimepicker({
@@ -255,12 +336,46 @@
              });
 
          });*/
+
+
     </script>
 </head>
 <body style="background-color: #f7f7f7;height: 100%">
 <div>
 
     <div class="container-fluid">
+        <!--导航-->
+        <div class="navbar-wrapper">
+            <div class="container" id="navcontainer">
+                <nav class="navbar navbar-inverse  navbar-fixed-top " role="navigation">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#">来华留学生入学通知书打印系统</a>
+                        </div>
+                        <form class="navbar-form navbar-left" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="请输入留学生姓名" id="searchName">
+                            </div>
+                            <button type="button" class="btn btn-primary" id="queryButton">搜索</button>
+                        </form>
+                        <div class="navbar-right">
+                            <p class="navbar-brand">欢迎您：${loginUser.USERNAME}</p>
+                            <ul class="nav navbar-nav">
+                                <li><a data-toggle="modal" onclick="updatePassword()" >修改密码</a></li>
+                                <li><a data-toggle="modal"  href="${pageContext.request.contextPath}/user/logout">退出</a></li>
+                            </ul>
+                        </div>
+               <%--         <div class="navbar-right">
+                            <ul class="nav navbar-nav">
+                                <li><a data-toggle="modal" data-target="#register" >注册</a></li>
+                                <li><a data-toggle="modal" data-target="#signin" >登录</a></li>
+                            </ul>
+                        </div>--%>
+                    </div>
+                </nav>
+
+            </div>
+        </div>
     </div>
     <div class="" id="boot">
         <div class="container" id="table">
@@ -287,22 +402,34 @@
 <!-- 工具容器 -->
 <div id="toolbar" class="btn-group">
     <form class="form-inline">
+      <%--  <span>
+        <input type="text" class="form-control" id="searchName" placeholder="请输入姓名"
+               style="width: 150px">
+        <button type="button" class="btn btn-primary queryButton" id="queryButton">查询</button>
+        </span>--%>
+        <shiro:hasPermission name="save-resource">
         <button id="btn_upload" type="button" class="btn btn-default" onclick="saveMemberInfoShow()">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增打印
         </button>
+        </shiro:hasPermission>
+        <shiro:hasPermission name="edit-resource">
         <button id="btn_edit" type="button" class="btn btn-default" onclick="editMemberInfoShow();">
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>选择修改
         </button>
+        </shiro:hasPermission>
+        <shiro:hasPermission name="delete-resource">
         <button id="btn_delete" type="button" class="btn btn-default" onclick="delStudent();">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>选择删除
         </button>
-        <button id="btn_import" type="button" class="btn btn-default" onclick="delMemberVideo();">
-            <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>导入
+        </shiro:hasPermission>
+        <button id="btn_export" type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>导出
         </button>
-
-        <input type="text" class="form-control" id="searchName" placeholder="请输入姓名"
-               style="width: 150px;margin-left: 500px">
-        <button type="button" class="btn btn-primary queryButton" id="queryButton">查询</button>
+        <shiro:hasPermission name="givepermission-resource">
+        <button id="btn_per" type="button" class="btn btn-default" onclick="givepermission();">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>批量授权
+        </button>
+        </shiro:hasPermission>
     </form>
     </form>
 </div>
@@ -693,7 +820,8 @@
 
         document.getElementById("modalForm").reset();
 
-        $('#myModal').modal("show");
+        $('#myModal').modal();
+
 
     }
 
@@ -715,24 +843,25 @@
             $.ajax({
                 url: "${pageContext.request.contextPath}/recode/saveMessage.action",
                 type: "post",
-                //contentType:'application/json;charset=utf-8',
                 async: false,
-                //dataType: "json",
                 data: {
                     // mparam: escape(encodeURIComponent(JSON.stringify({dataMap: dataMap})))
                     "mparam": JSON.stringify(mparam)
 
                 },
                 success: function (data) {
+
                     toastr.success('添加成功');
+
                     $('#myModal').modal('hide');
                     //模态框隐藏以后将表单重置
-                    $('#myModal').on('hide.bs.modal', function () {
+        /*            $('#myModal').on('hide.bs.modal', function () {
 
                         document.getElementById("modalForm").reset();
 
-                    });
+                    });*/
                     $('#student-table').bootstrapTable('refresh');
+
                 },
                 error: function () {
                     // prompt.showToastr("error", "网络异常！");
@@ -781,6 +910,13 @@
     //实现删除和多项删除
     function delStudent() {
 
+        var selected = $("#student-table").bootstrapTable("getSelections");
+
+        if (selected.length == 0) {
+            toastr.warning('请您至少选择一条信息');
+            return;
+        }
+
         $('#delcfmModel').modal();
 
     }
@@ -788,11 +924,6 @@
     function delMemberVideo() {
 
         var selected = $("#student-table").bootstrapTable("getSelections");
-
-        if (selected.length == 0) {
-            toastr.warning('请您至少选择一条信息');
-            return;
-        }
 
         var sid = [];
         for (var i = 0; i < selected.length; i++) {
@@ -874,11 +1005,14 @@
                 //console.info(data.ID);
                 //对多选框的操作回显
                 var str = data.SOURCEOFMONEY;
+
                 if (str != "" && str != null) {
+
                     var checkboxs = str.split(",");
 
                     //console.info(checkboxs[0]);
                     obj = document.getElementsByName("source");
+
                     //check_val = [];
                     for (var v = 0; v < checkboxs.length; v++) {
                         for (k in obj) {
@@ -914,6 +1048,290 @@
         });
 
     }
+
+    //授权方法
+    function givepermission(){
+
+        $.ajax({
+            url: "${pageContext.request.contextPath}/user/getUsers.action",
+            type: "post",
+            async: false,
+            success: function (data) {
+                //toastr.success('删除成功');
+               // $('#student-table').bootstrapTable('refresh');
+
+                var  userList=data.userList;
+
+                var html="";
+
+                for (var i=0;i<userList.length;i++){
+
+                    html+="<tr>"
+                    html +=   "<td><input name=\""+userList[i].USERID+"\" class=\"checkbox\" type=\"checkbox\" onclick=\"checkOne()\"></td>"
+                    html +=   "<td>" + userList[i].USERNAME + "</td>"
+                    html +=    "<td>" +userList[i].ROLENAME + "</td>"
+                    html+="</tr>"
+
+                }
+
+                $("#tableble").html(html);
+
+                $("#myLabel").modal();
+
+            },
+            error: function () {
+                toastr.error('获取用户列表失败');
+            }
+        });
+
+    }
+    
+    function  isPermission() {
+
+        var checkedUser=[];
+
+        var checks=$(".checkbox");
+
+        for(var c=0;c<checks.length;c++){
+
+            if(checks[c].checked==true){
+
+                checkedUser.push(checks[c].getAttribute("name"));
+
+            }
+
+        }
+        if (checkedUser.length==0) {
+
+            toastr.warning('请您至少选择一条信息');
+
+            return;
+
+        }
+        var ckeckStr= checkedUser.join(",")
+
+        $.ajax({
+            url: "${pageContext.request.contextPath}/user/permissions.action",
+            type: "post",
+            async: false,
+            data:{
+
+                "checkStr":ckeckStr
+
+            },
+            success: function (data) {
+
+                toastr.success('授权成功');
+
+                $("#myLabel").modal('hide');
+
+            },
+            error: function () {
+
+                toastr.error('授权失败');
+
+            }
+        });
+
+
+
+        
+    }
+    //实现全选和反选
+    function checkAll(){
+
+      var  che=document.getElementById("checkall");
+
+      if (che.checked==true){
+
+        var checks=$(".checkbox");
+
+        for(var c=0;c<checks.length;c++){
+
+            checks[c].checked=true;
+
+        }
+
+        }else {
+
+            var checks=$(".checkbox");
+
+            for(var c=0;c<checks.length;c++){
+
+                checks[c].checked=false;
+
+            }
+
+        }
+
+   }
+
+   //实现单选与全选的联动
+    function checkOne(){
+
+        var  che=document.getElementById("checkall");
+
+            var checks=$(".checkbox");
+
+            for(var c=0;c<checks.length;c++){
+
+               if(checks[c].checked==false){
+
+                   che.checked=false;
+
+                   return;
+
+               }
+
+            }
+
+          che.checked=true;
+
+    }
+
+    //修改密码的实现
+     function  updatePassword() {
+
+        $("#myPassModal").modal();
+         
+     }
+
+     //校验旧密码是否输入正确
+    function checkOldPass(){
+
+        var oldPass=$("#oldPass").val();
+
+        $.ajax({
+
+            url: "${pageContext.request.contextPath}/user/checkPass.action",
+
+            type: "post",
+
+            async: false,
+
+            data: {
+
+                "oldPass": oldPass
+
+            },
+            success: function (data) {
+
+                if (data=="error") {
+
+                    $("#oldTip").show();
+
+                    $("#oldTip").html("旧密码输入错误！");
+
+                }
+
+            },
+            error: function () {
+
+                toastr.error('获取原密码失败');
+
+            }
+        });
+
+    }
+    
+    function  hideOldTip() {
+
+        $("#oldTip").hide();
+        $("#reTip").hide();
+        
+    }
+
+    function checkRePass() {
+
+        var  password=$("#newPass").val();
+
+        if (password!=$("#rePass").val()){
+
+            $("#reTip").show();
+
+            $("#reTip").html("密码输入错误！");
+
+            //$("#reg_btn").attr("disabled")
+
+        }
+
+    }
+    
+    function  savePassword() {
+
+        var oldPass=$("#oldPass").val();
+
+        if (oldPass==""||oldPass==null){
+
+            toastr.warning('请填写原密码！');
+
+            return 0;
+
+        }
+
+        var  newPass=$("#newPass").val();
+
+        if (newPass==""||newPass==null){
+
+            toastr.warning('请填写新密码！');
+
+            return 0;
+
+        }
+
+        var  rePass=$("#rePass").val();
+
+        if (rePass==""||rePass==null){
+
+
+            toastr.warning('请确认密码！');
+
+            return 0;
+
+
+        }
+        if (newPass!=rePass) {
+
+            return 0;
+
+        }
+
+        $.ajax({
+
+            url: "${pageContext.request.contextPath}/user/updatePass.action",
+
+            type: "post",
+
+            async: false,
+
+            data: {
+
+                "newPass": newPass
+
+            },
+            success: function (data) {
+
+                if (data=="success"){
+
+                    toastr.success('修改成功,即将跳转到登录页。');
+
+                    $("#myPassModal").modal("hide");
+
+                    //response.setHeader("refresh","3;${pageContext.request.contextPath}/user/home.action")
+
+                  setTimeout("window.location.href=\"${pageContext.request.contextPath}/user/home.action\";",3000)
+
+                }
+
+            },
+            error: function () {
+
+                toastr.error('修改密码失败');
+            }
+        });
+
+    }
+
 </script>
 
 <%--确认删除模态框--%>
@@ -923,7 +1341,6 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">×</span></button>
-                <%-- <h4 class="modal-title">提示信息</h4>--%>
             </div>
             <div class="modal-body">
                 <p>您确认要删除吗？</p>
@@ -936,5 +1353,73 @@
     </div>
 </div>
 
+<div class="modal fade in" id="myLabel">
+    <div class="modal-dialog">
+        <div class="modal-content message_align" style="width: 500px !important;">
+            <div class="modal-header">
+                <span style="font-size: large">授予超级管理员权限</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body" id="tanchu">
+
+                <div class="bs-example" data-example-id="hoverable-table">
+
+                    <table class="table" id="btable">
+                        <thead>
+                        <tr>
+                            <th><input id="checkall" class="checkall" type="checkbox" onclick="checkAll()"></th>
+                            <th>用户名</th>
+                            <th>角色名称</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableble">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="aa">取消</button>
+                <a onclick="isPermission()" class="btn btn-success">授权</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%--修改密码的模态框--%>
+<div class="modal fade" id="myPassModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myupdateLabel">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="application">
+                    <form class="form-inline" id="updatePassForm" >
+                        <label for="snumber">请输入旧密码:</label>
+                        <input type="password" class="form-control" id="oldPass" onblur="checkOldPass()" onfocus="hideOldTip()">
+                        <br>
+                        <span style="display: none;margin-left: 125px;color: red" id="oldTip"></span>
+                        <br>
+                        <label for="snumber">请输入新密码:</label>
+                        <input type="password" class="form-control" id="newPass">
+                        <br>
+                        <br>
+                        <label for="snumber">请确认新密码:</label>
+                        <input type="password" class="form-control" id="rePass" onblur="checkRePass()" onfocus="hideOldTip()">
+                        <br>
+                        <span style="display: none;margin-left: 125px;color: red" id="reTip"></span>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="updatePass" onclick="savePassword()">保存</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

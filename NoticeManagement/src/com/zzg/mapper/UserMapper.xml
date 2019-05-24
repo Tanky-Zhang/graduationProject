@@ -32,9 +32,10 @@
             U.USERNAME=#{USERNAME}
     </select>
     
-    <select id="getUserName" resultType="String" parameterType="String">
+    <select id="getUserName" resultType="map" parameterType="String">
         SELECT
-           USERNAME
+           USERNAME,
+           PASSWORD
         FROM
            T_USER
         WHERE
@@ -51,5 +52,47 @@
                (#{ID},#{USERNAME},#{PASSWORD},'admin')/*默认是admin的角色*/
 
     </insert>
+
+    <select id="getUsers" resultType="map">
+        SELECT
+           A.USERID,
+           A.USERNAME,
+           A.ROLEID,
+           B.ROLENAME
+        FROM
+           T_USER A,
+           SYS_ROLE B
+        WHERE
+           A.ROLEID=B.ROLEID
+          AND
+           A.ROLEID!='superadmin'
+    </select>
+    
+    <update id="givePer" parameterType="String" >
+       UPDATE
+         T_USER
+        SET
+         ROLEID='superadmin'
+
+        WHERE
+         USERID
+        IN
+        <foreach collection="array" item="ids" open="(" close=")" separator=",">
+
+         #{ids}
+
+        </foreach>
+    </update>
+    
+    <update id="updatePass" parameterType="map" >
+
+        UPDATE
+           T_USER
+         SET
+           PASSWORD=#{PASSWORD}
+        WHERE
+           USERNAME=#{USERNAME}
+
+    </update>
 
 </mapper>

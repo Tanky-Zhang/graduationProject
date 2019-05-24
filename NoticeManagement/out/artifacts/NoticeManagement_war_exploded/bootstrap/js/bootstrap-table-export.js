@@ -189,14 +189,17 @@
             return;
           }
           var $btnGroup = this.$toolbar.find('>.btn-group');
-          var $export = $btnGroup.find('div.export');
+          this.$export = $btnGroup.find('div.export');
 
-          if ($export.length) {
+          if (this.$export.length) {
+            this.updateExportButton();
             return;
           }
-          $export = $('\n        <div class="export btn-group">\n        <button class="btn btn-' + o.buttonsClass + ' btn-' + o.iconSize + ' dropdown-toggle"\n          aria-label="export type"\n          title="' + o.formatExport() + '"\n          data-toggle="dropdown"\n          type="button">\n          <i class="' + o.iconsPrefix + ' ' + o.icons.export + '"></i>\n          <span class="caret"></span>\n        </button>\n        ' + bootstrap.html.dropmenu + '\n        </div>\n      ').appendTo($btnGroup);
+          this.$export = $('\n        <div class="export btn-group">\n        <button class="btn btn-' + o.buttonsClass + ' btn-' + o.iconSize + ' dropdown-toggle"\n          aria-label="export type"\n          title="' + o.formatExport() + '"\n          data-toggle="dropdown"\n          type="button">\n          <i class="' + o.iconsPrefix + ' ' + o.icons.export + '"></i>\n          <span class="caret"></span>\n        </button>\n        ' + bootstrap.html.dropmenu + '\n        </div>\n      ').appendTo($btnGroup);
 
-          var $menu = $export.find('.dropdown-menu');
+          this.updateExportButton();
+
+          var $menu = this.$export.find('.dropdown-menu');
           var exportTypes = o.exportTypes;
 
           if (typeof exportTypes === 'string') {
@@ -205,35 +208,27 @@
               return t.slice(1, -1);
             });
           }
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+          for (var _iterator = exportTypes, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+            var _ref;
 
-          try {
-            for (var _iterator = exportTypes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var type = _step.value;
-
-              if (TYPE_NAME.hasOwnProperty(type)) {
-                $menu.append(Utils.sprintf(bootstrap.html.dropitem, type, TYPE_NAME[type]));
-              }
+            if (_isArray) {
+              if (_i >= _iterator.length) break;
+              _ref = _iterator[_i++];
+            } else {
+              _i = _iterator.next();
+              if (_i.done) break;
+              _ref = _i.value;
             }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
+
+            var type = _ref;
+
+            if (TYPE_NAME.hasOwnProperty(type)) {
+              $menu.append(Utils.sprintf(bootstrap.html.dropitem, type, TYPE_NAME[type]));
             }
           }
 
-          $menu.find('>li, >a').click(function (_ref) {
-            var currentTarget = _ref.currentTarget;
+          $menu.find('>li, >a').click(function (_ref2) {
+            var currentTarget = _ref2.currentTarget;
 
             var type = $(currentTarget).data('type');
             var exportOptions = {
@@ -250,9 +245,17 @@
           var _this3 = this;
 
           var o = this.options;
+          var stateField = this.header.stateField;
+          var isCardView = o.cardView;
 
-          var doExport = function doExport() {
-            var that = _this3;
+          var doExport = function doExport(callback) {
+            if (stateField) {
+              _this3.hideColumn(stateField);
+            }
+            if (isCardView) {
+              _this3.toggleView();
+            }
+
             var data = _this3.getData();
             if (o.exportFooter) {
               var $footerRow = _this3.$tableFooter.find('tr').first();
@@ -261,7 +264,7 @@
 
               $.each($footerRow.children(), function (index, footerCell) {
                 var footerCellHtml = $(footerCell).children('.th-inner').first().html();
-                footerData[that.columns[index].field] = footerCellHtml === '&nbsp;' ? null : footerCellHtml;
+                footerData[_this3.columns[index].field] = footerCellHtml === '&nbsp;' ? null : footerCellHtml;
 
                 // grab footer cell text into cell index-based array
                 footerHtml.push(footerCellHtml);
@@ -276,27 +279,30 @@
               });
             }
 
-            _this3.$el.tableExport($.extend({}, o.exportOptions, options));
+            _this3.$el.tableExport($.extend({
+              onAfterSaveToFile: function onAfterSaveToFile() {
+                if (o.exportFooter) {
+                  _this3.load(data);
+                }
 
-            if (o.exportFooter) {
-              _this3.load(data);
-            }
+                if (stateField) {
+                  _this3.showColumn(stateField);
+                }
+                if (isCardView) {
+                  _this3.toggleView();
+                }
+
+                callback();
+              }
+            }, o.exportOptions, options));
           };
 
-          var stateField = this.header.stateField;
-          var isCardView = o.cardView;
-
-          if (stateField) {
-            this.hideColumn(stateField);
-          }
-          if (isCardView) {
-            this.toggleView();
-          }
           if (o.exportDataType === 'all' && o.pagination) {
             var eventName = o.sidePagination === 'server' ? 'post-body.bs.table' : 'page-change.bs.table';
             this.$el.one(eventName, function () {
-              doExport();
-              _this3.togglePagination();
+              doExport(function () {
+                _this3.togglePagination();
+              });
             });
             this.togglePagination();
           } else if (o.exportDataType === 'selected') {
@@ -316,16 +322,24 @@
             }
 
             this.load(selectedData);
-            doExport();
-            this.load(data);
+            doExport(function () {
+              _this3.load(data);
+            });
           } else {
             doExport();
           }
-          if (stateField) {
-            this.showColumn(stateField);
-          }
-          if (isCardView) {
-            this.toggleView();
+        }
+      }, {
+        key: 'updateSelected',
+        value: function updateSelected() {
+          _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'updateSelected', this).call(this);
+          this.updateExportButton();
+        }
+      }, {
+        key: 'updateExportButton',
+        value: function updateExportButton() {
+          if (this.options.exportDataType === 'selected') {
+            this.$export.find('> button').prop('disabled', !this.getSelections().length);
           }
         }
       }]);

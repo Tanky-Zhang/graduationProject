@@ -10,7 +10,15 @@ public interface UserMapper {
 
     List<String> getPermission(Map userMap);
 
-    String getUserName(String username);
+    Map getUserName(String username);
 
     void registUser(Map map);
+
+    List getUsers();
+
+    void givePer(String checkStr);
+
+    void givePer(String[] checkArr);
+
+    void updatePass(Map userMap);
 }

@@ -1,34 +1,24 @@
 package com.zzg.controller;
 
 import com.google.gson.Gson;
-
 import com.zzg.service.RecodeService;
 import com.zzg.utils.PageBean;
-
-
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Controller
 @RequestMapping("/recode")
 public class RecodeController {
-
 
     @Autowired
     RecodeService recodeService;
@@ -36,23 +26,27 @@ public class RecodeController {
 
     @RequestMapping("/getList")
     @ResponseBody
-    public Map getList(@Param("stuName") String stuName, @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
-                       @RequestParam(value = "pageSize", defaultValue = "20") int pageSize , Model model, ServletRequest request) {
+    public Map getList(@Param("stuName") String stuName, @RequestParam(value = "pageOffset", defaultValue = "0") int pageOffset,
+                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize , Model model, HttpServletRequest request) {
 
         String stuName1 = request.getParameter("stuName");
 
         PageBean pageBean = new PageBean();
 
-        pageBean.setCurrentPage(pageNumber);
+        pageBean.setCurrentPage(pageOffset);
+
         pageBean.setPageSize(pageSize);
 
         List list = recodeService.getList(stuName, pageBean);
 
         Map map = new HashMap();
 
+        //System.out.println(pageBean.getRows());
+
         map.put("total", pageBean.getTotal());
 
         map.put("rows", pageBean.getRows());
+
 
         return map;
 
@@ -154,8 +148,6 @@ public class RecodeController {
         //response.sendRedirect( str+ "/recod.jsp");
 
         //request.getRequestDispatcher("/WEB-INF/jsp/recod.jsp").forward(request,response);
-
-
         return "recod";
 
     }

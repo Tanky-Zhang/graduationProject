@@ -8,7 +8,7 @@ import java.util.List;
 public class PageBean extends ArrayList{
     /**
      *
-     * @author zhaoqx
+     * @author ZhangZhongguo
      *
      */
     private int currentPage;//当前页

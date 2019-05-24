@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public String getUserName(String username){
+    public Map getUserName(String username){
 
         return  userMapper.getUserName(username);
 
@@ -52,5 +53,24 @@ public class UserServiceImpl implements UserService {
 
         userMapper.registUser(map);
 
+    }
+
+    @Override
+    public List getUsers() {
+        return userMapper.getUsers();
+    }
+
+    @Override
+    public void givePer(String checkStr) {
+
+
+        String[] checkArr = checkStr.split(",");
+
+        userMapper.givePer(checkArr);
+    }
+
+    @Override
+    public void updatePass(Map userMap) {
+        userMapper.updatePass(userMap);
     }
 }

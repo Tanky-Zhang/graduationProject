@@ -18,4 +18,6 @@ public interface RecodeMapper {
     void editMessage(Map map);
 
     Map<String,Object> getStudentByid(String sid);
+
+    Integer getCount(@Param("name")String name);
 }

@@ -16,22 +16,25 @@
         ADDRESS
         FROM
         MESSAGE
-
         <where>
             <if test="name!=null and name!=''">
                 SNAME LIKE CONCAT('%',#{name},'%')
             </if>
         </where>
-
         LIMIT #{start},#{pageSize}
 
     </select>
     <!--获取总条数-->
-    <select id="getCount" resultType="int">
+    <select id="getCount" parameterType="String" resultType="int">
         SELECT
             COUNT(1)
         FROM
             MESSAGE
+        <where>
+            <if test="name!=null and name!=''">
+                SNAME LIKE CONCAT('%',#{name},'%')
+            </if>
+        </where>
     </select>
 
     <!--插入学生信息-->

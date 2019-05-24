@@ -1,12 +1,10 @@
 package com.zzg.service.serviceImpl;
-
 import com.zzg.mapper.RecodeMapper;
 import com.zzg.service.RecodeService;
 import com.zzg.utils.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Map;
 
@@ -20,17 +18,18 @@ public class RecodeServiceImpl implements RecodeService {
     @Override
     public List getList(String name, PageBean pageBean) {
 
-        int start=(pageBean.getCurrentPage()-1)*pageBean.getPageSize();
+        //int start=(pageBean.getCurrentPage()-1)*pageBean.getPageSize();
 
-        List<Map> list=recodeMapper.getList(name,start,pageBean.getPageSize());
+        List<Map> list=recodeMapper.getList(name,pageBean.getCurrentPage(),pageBean.getPageSize());
 
-        Integer count = recodeMapper.getCount();
+        Integer count = recodeMapper.getCount(name);
 
         pageBean.setTotal(count);
 
         pageBean.setRows(list);
 
         return pageBean;
+
     }
 
     @Override

@@ -1,5 +1,4 @@
 package com.zzg.controller;
-
 import com.google.gson.Gson;
 import com.zzg.service.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -11,8 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -49,9 +49,9 @@ public class UserAction {
     public String getUserName(String username, Model model){
 
 
-        String userName = userService.getUserName(username);
+        Map userMap = userService.getUserName(username);
 
-        if (userName!=null&&!userName.equals("")){
+        if (userMap.get("USERNAME")!=null&&!userMap.get("USERNAME").equals("")){
 
             return "error";
 
@@ -64,7 +64,6 @@ public class UserAction {
     @RequestMapping("/registUser")
     @ResponseBody
     public String registUser(String userMessage,Model model){
-
 
         Map map = new Gson().fromJson(userMessage, Map.class);
 
@@ -91,13 +90,12 @@ public class UserAction {
     }
 
     @RequestMapping("/login")
+    @ResponseBody
     public String login(String userName, String passWord, HttpSession session) {
 
         Subject subject=SecurityUtils.getSubject();
 
-
         AuthenticationToken token=new UsernamePasswordToken(userName,passWord);
-
 
         try{
 
@@ -107,18 +105,86 @@ public class UserAction {
 
             session.setAttribute("loginUser",userMap);
 
+
         }catch (Exception e){
 
-            e.printStackTrace();
+           // e.printStackTrace();
 
-            return "Login";
-
+            return "error";
 
         }
 
         //可以不用写这个返回值 因为在xml中配置了 成功后返回的页面
-        return  "redirect:/user/print.action";
+        return  "success";//redirect:/user/print.action
 
     }
+
+    @RequestMapping("/getUsers")
+    @ResponseBody
+    public Map getUsers(){
+
+        List userList=userService.getUsers();
+
+
+        Map resMap=new HashMap();
+
+        resMap.put("userList",userList);
+
+        return resMap;
+    }
+
+    @RequestMapping("/permissions")
+    @ResponseBody
+    public String givePer(String checkStr){
+
+        userService.givePer(checkStr);
+
+        return "success";
+
+    }
+
+    @RequestMapping("/logout")
+    public  String logOut(HttpSession session){
+
+        //清除session
+        session.removeAttribute("loginUser");
+
+        return "Login";
+
+    }
+    @RequestMapping("checkPass")
+    @ResponseBody
+    public  String checkPass(String oldPass,HttpSession session ){
+
+
+        Map userMap = (Map)session.getAttribute("loginUser");
+
+        Map uMap = userService.getUserName((String) userMap.get("USERNAME"));
+
+        String password=(String) uMap.get("PASSWORD");
+
+        if (oldPass!=null&&!password.equals(oldPass)){
+
+            return "error";
+
+        }
+
+        return "success";
+
+    }
+
+    @RequestMapping("/updatePass")
+    @ResponseBody
+    public String updatePass(String newPass,HttpSession session){
+
+        Map userMap = (Map)session.getAttribute("loginUser");
+
+        userMap.put("PASSWORD",newPass);
+
+        userService.updatePass(userMap);
+
+        return "success";
+    }
+
 
 }
