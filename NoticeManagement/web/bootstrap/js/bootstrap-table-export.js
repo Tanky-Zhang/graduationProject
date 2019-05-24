@@ -344,7 +344,12 @@
         }
       }]);
 
+
       return _class;
     }($.BootstrapTable);
+
+
+
+
   })(jQuery);
 });

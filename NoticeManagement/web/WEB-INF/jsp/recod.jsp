@@ -17,26 +17,7 @@
     <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-table.js"></script>
     <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-table-zh-CN.js"></script>
     <link href="${pageContext.request.contextPath }/bootstrap/css/bootstrap-table.css" rel="stylesheet">
-    <%--引入文件下载的css以及js--%>
-    <script src="${pageContext.request.contextPath }/js/recode/xlsx.core.min.js"></script>
-    <script src="${pageContext.request.contextPath }/js/recode/blob.js"></script>
-    <script src="${pageContext.request.contextPath }/js/recode/FileSaver.min.js"></script>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-table-export.js"></script>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/tableExport.min.js"></script>
-    <%--引入弹出模态框的js文件--%>
-    <%-- <script src="${pageContext.request.contextPath }/bootstrap/js/modal.js"></script>--%>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-modalmanager.js"></script>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-modal.js"></script>
-    <%--引入做时间控件的js和css--%>
-    <link href="${pageContext.request.contextPath }/bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-    <script src="${pageContext.request.contextPath }/bootstrap/js/moment-with-locales.js"></script>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-datetimepicker.fr.js"></script>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-datetimepicker.zh-CN.js"></script>
 
-    <%--引入时间提示的js和css--%>
-    <link href="${pageContext.request.contextPath }/bootstrap/css/toastr.css" rel="stylesheet">
-    <script src="${pageContext.request.contextPath }/bootstrap/js/toastr.js"></script>
     <style>
         #myImg {
 
@@ -50,7 +31,7 @@
         }
         #father {
 
-            background-color: rgba(149, 57, 229, 0.15);
+            background-color: rgba(219, 229, 163, 0.15);
 
         }
         #leftM {
@@ -95,6 +76,28 @@
 
 
 <div class="row" style="height: 80px">
+    <!--导航-->
+    <div class="navbar-wrapper">
+        <div class="container" id="navcontainer">
+            <nav class="navbar navbar-inverse  navbar-fixed-top " role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#"><P style="font-size: x-large">来华留学生入学通知书打印系统</P></a>
+
+                    </div>
+
+                    <div class="navbar-right">
+                        <p class="navbar-brand">欢迎您：${loginUser.USERNAME}</p>
+                        <ul class="nav navbar-nav">
+                            <li><a data-toggle="modal" onclick="updatePassword()" >修改密码</a></li>
+                            <li><a data-toggle="modal"  href="${pageContext.request.contextPath}/user/logout">退出</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+        </div>
+    </div>
 </div>
 
 <div class="row">
@@ -118,7 +121,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;恭喜您，被<span>${stu.HOSTINSTITUTION}${stu.FIELD_OF_STUDY}</span>专业录取，请凭本通知书来校报到。
                     </p>
                 </div>
-                <div class="text" style='font-size: 30px;padding-left: 600px;padding-top: 20px'>
+                <div class="text" style='font-size: 30px;padding-left: 650px;padding-top: 20px'>
                     <p>${stu.HOSTINSTITUTION}学生处</p>
                 </div>
 
@@ -165,9 +168,11 @@
 
                 <br>
                 <br>
-                <button type="button" class="btn btn-default" id="selectM" onclick="choseTemplement()" style="margin-right: 30px !important;">选择模版
-                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="button" class="btn btn-primary" id="sprintM" onclick="savemessage()">打印</button>
+
+                <button type="button" class="btn btn-primary" id="sprintM" onclick="savemessage()"  style="margin-right: 30px !important;">打印</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-primary" id="selectM"  onclick="history.back(1);">返回</button>
+
             </div>
 
         </div>
@@ -175,7 +180,6 @@
 </div>
 <script>
 
-    var srcPict="";
 
     function savemessage() {
 
@@ -183,33 +187,24 @@
 
     }
 
-    function choseTemplement(){
 
-        document.getElementById("imgto").src = srcPict;
-
-    }
 
     $(function () {
 
         $("#cbox1").click(function () {
-            if ($(this).hasClass("on")) {
-                $(this).removeClass("on");
-                console.log($('#img1').attr("src"))
-            } else {
+
                 $(this).addClass("on");
                 $("#cbox2").removeClass("on");
-                srcPict=$('#img1').attr("src");
-            }
+                document.getElementById("imgto").src =$('#img1').attr("src");
+
         })
         $("#cbox2").click(function () {
 
-            if ($(this).hasClass("on")) {
-                $(this).removeClass("on");
-            } else {
+
                 $(this).addClass("on");
                 $("#cbox1").removeClass("on");
-                srcPict=$('#img2').attr("src");
-            }
+                document.getElementById("imgto").src =$('#img2').attr("src");
+
         })
 
     })

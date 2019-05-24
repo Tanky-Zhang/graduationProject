@@ -12,7 +12,7 @@
     <%--引入popper.js--%>
     <script src="${pageContext.request.contextPath }/bootstrap/js/popper.js"></script>
     <%--引入bootstrap的js和css--%>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap.js"></script>
     <link href="${pageContext.request.contextPath }/bootstrap/css/bootstrap.css" rel="stylesheet">
     <%--引入bootstrap-table的js和css--%>
     <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-table.js"></script>
@@ -27,7 +27,6 @@
     <script src="${pageContext.request.contextPath }/bootstrap/js/xlsx.core.min.js"></script>
     <script src="${pageContext.request.contextPath }/bootstrap/js/FileSaver.min.js"></script>
     <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap-table-zh-CN.js"></script>
-    <script src="${pageContext.request.contextPath }/bootstrap/js/base64.js"></script>
 
 
 
@@ -47,7 +46,7 @@
     <style type="text/css">
         .container-fluid {
 
-            height: 130px;
+            height: 120px;
 
             /*background-color: rgba(149, 57, 229, 0.15);*/
 
@@ -80,9 +79,6 @@
             margin-right: 40px;
 
         }
-        .dropup .dropdown-menu{
-            bottom: auto;
-        }
         #updatePassForm{
 
             padding-left: 135px;
@@ -92,7 +88,7 @@
             margin-top: -217px !important;
         }
 
-        .float-right{
+     /*   .float-right{
             float: right;
             margin-top: -45px !important;
         }
@@ -100,7 +96,7 @@
         a{
             display: inherit;
             padding: 4px 5px;
-        }
+        }*/
     </style>
     <script>
 
@@ -189,7 +185,7 @@
 
         function initTabel(){
 
-            $('#student-table').bootstrapTable('destroy');
+            //$('#student-table').bootstrapTable('destroy');
 
             $('#student-table').bootstrapTable({
 
@@ -217,20 +213,20 @@
                 //height: 30,                        //行高，如果没有设置height属性，表格自动根据记录条数表格高度
                 uniqueId: "ID",                    //每一行的唯一标识，一般为主键列
                 strictSearch: true,
-                // showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
-                // cardView: false,                    //是否显示详细视图
+                //showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
                 //detailView: false,                   //是否显示父子表
                 //showExport: true,                     //是否显示导出
                 // exportDataType: "all",              //basic', 'all', 'selected'.
                 columns: columns,
-                paginationLoop: false,
+                paginationLoop: true,
                 /*  onPageChange:function(number, size){
                       pageNumber=number;
                       pageSize=size;
                   },*/
                 queryParams: function (params) {
 
-                    console.log(params);
+                    //console.log(params);
 
                     /*pageNumber=(params.offset/params.limit)+1;//将页码和每页的条数赋给全局变量用于展示序号
 
@@ -239,7 +235,6 @@
                     var temp = {
 
                         stuName: $("#searchName").val(),
-                       // numStart: numStart,   //当前页码
                         pageSize :params.limit, // 每页显示数量
                         pageOffset :params.offset // 每页显示数量
 
@@ -251,15 +246,16 @@
                 //paginationLoop: true,
                 //export: 'glyphicon-export icon-share',
                 showExport: true,              //是否显示导出按钮(此方法是自己写的目的是判断终端是电脑还是手机,电脑则返回true,手机返回falsee,手机不显示按钮)
+                initExport:true,
                 exportDataType: "all",              //basic', 'all', 'selected'.
-                exportTypes:['excel','xlsx'],	    //导出类型
-                exportButton: $('#btn_export'),     //为按钮btn_export  绑定导出事件  自定义导出按钮(可以不用)
+                exportTypes:['excel'],	    //导出类型
+                //exportButton: $('#btn_export'),     //为按钮btn_export  绑定导出事件  自定义导出按钮(可以不用)
                 exportOptions:{
                     ignoreColumn: [0,0],            //忽略某一列的索引
-                    fileName: '数据导出',              //文件名称设置
-                    worksheetName: 'Sheet1'          //表格工作区名称
+                    fileName: '留学生信息表',              //文件名称设置
+                    worksheetName: 'Sheet1',          //表格工作区名称
                     //tableName: '商品数据表',
-                    //excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+                    excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
                     //onMsoNumberFormat: DoOnMsoNumberFormat
                 }
                 //导出excel表格设置<<<<<<<<<<<<<<<
@@ -312,8 +308,90 @@
             })
 
 
+           /* $("#myExportData").click(function () {
+
+                var type = $("#myExportData").val(),//导出文件类型,赋值在按钮标签上的value属性
+
+                    doExport = function () {
+                        that.$el.tableExport($.extend({}, that.options.exportOptions, {
+                            type: type,
+                            escape: false
+                        }));
+                    };
+
+                if (that.options.exportDataType === 'all' && that.options.pagination) {
+                    that.$el.one(that.options.sidePagination === 'server' ? 'post-body.bs.table' : 'page-change.bs.table', function () {
+                        doExport();
+                        that.togglePagination();
+                    });
+                    that.togglePagination();
+                } else if (that.options.exportDataType === 'selected') {
+                    var data = that.getData(),
+                        selectedData = that.getAllSelections();
+
+                    // Quick fix #2220
+                    if (that.options.sidePagination === 'server') {
+                        data = {total: that.options.totalRows};
+                        data[that.options.dataField] = that.getData();
+
+                        selectedData = {total: that.options.totalRows};
+                        selectedData[that.options.dataField] = that.getAllSelections();
+                    }
+
+                    that.load(selectedData);
+                    doExport();
+                    that.load(data);
+                } else {
+                    doExport();
+                }
+            });
+*/
+
         });
 
+      /*  function exportData(){
+            //导出数据
+            $('#student-table').tableExport({
+                type: 'excel',
+                exportDataType: 'all',
+                escape: 'false',
+                ignoreColumn: [0,12],  //忽略某一列的索引
+                fileName: '用户列表',  //文件名称设置
+                worksheetName: 'sheet1',  //表格工作区名称
+                tableName: '用户列表',
+                onMsoNumberFormat: doOnMsoNumberFormat,
+                onCellHtmlData: DoOnCellHtmlData,
+            });
+        }
+
+        //数字
+        function doOnMsoNumberFormat(cell, row, col){
+            var result = "";
+            if (row > 0 && col == 0){
+                result = "\\@";
+            }
+            return result;
+        }
+
+        //处理导出内容,这个方法可以自定义某一行、某一列、甚至某个单元格的内容,也就是将其值设置为自己想要的内容
+        function DoOnCellHtmlData(cell, row, col, data){
+            if(row == 0){
+                return data;
+            }
+
+            //由于备注列超过6个字的话,通过span标签处理只显示前面6个字,如果直接导出的话会导致内容不完整,因此要将携带完整内容的span标签中title属性的值替换
+            if(col == 4 || col ==11 || col == 7){
+                var spanObj = $(data);//将带 <span title="val"></span> 标签的字符串转换为jQuery对象
+                var title = spanObj.attr("title");//读取<span title="val"></span>中title属性的值
+                //var span = cell[0].firstElementChild;//读取cell数组中的第一个值下的第一个元素
+                if(typeof(title) != 'undefined'){
+                    return title;
+                }
+            }
+
+            return data;
+        }
+*/
 
         //初始化时间控件
         /* $(function () {
@@ -350,7 +428,7 @@
                 <nav class="navbar navbar-inverse  navbar-fixed-top " role="navigation">
                     <div class="container">
                         <div class="navbar-header">
-                            <a class="navbar-brand" href="#">来华留学生入学通知书打印系统</a>
+                            <a class="navbar-brand" href="#"><P style="font-size: x-large">来华留学生入学通知书打印系统</P></a>
                         </div>
                         <form class="navbar-form navbar-left" role="search">
                             <div class="form-group">
@@ -365,12 +443,6 @@
                                 <li><a data-toggle="modal"  href="${pageContext.request.contextPath}/user/logout">退出</a></li>
                             </ul>
                         </div>
-               <%--         <div class="navbar-right">
-                            <ul class="nav navbar-nav">
-                                <li><a data-toggle="modal" data-target="#register" >注册</a></li>
-                                <li><a data-toggle="modal" data-target="#signin" >登录</a></li>
-                            </ul>
-                        </div>--%>
                     </div>
                 </nav>
 
@@ -422,8 +494,8 @@
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>选择删除
         </button>
         </shiro:hasPermission>
-        <button id="btn_export" type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>导出
+        <button id="myExportData" type="button" class="btn btn-default">
+            <span class="export-excel glyphicon glyphicon-share-alt" aria-hidden="true"></span>导出
         </button>
         <shiro:hasPermission name="givepermission-resource">
         <button id="btn_per" type="button" class="btn btn-default" onclick="givepermission();">

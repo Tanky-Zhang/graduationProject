@@ -11,32 +11,32 @@ public class PageBean extends ArrayList{
      * @author ZhangZhongguo
      *
      */
-    private int currentPage;//当前页
-    private int pageSize;//每页的条数
-    private int total;//总条数
+    private Integer currentPage;//当前页
+    private Integer pageSize;//每页的条数
+    private Integer total;//总条数
     private List rows;//查询的集合
 
-    public int getCurrentPage() {
+    public Integer getCurrentPage() {
         return currentPage;
     }
 
-    public void setCurrentPage(int currentPage) {
+    public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
     }
 
-    public int getPageSize() {
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
 
-    public int getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 

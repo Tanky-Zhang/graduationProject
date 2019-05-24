@@ -26,10 +26,12 @@ public class RecodeController {
 
     @RequestMapping("/getList")
     @ResponseBody
-    public Map getList(@Param("stuName") String stuName, @RequestParam(value = "pageOffset", defaultValue = "0") int pageOffset,
-                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize , Model model, HttpServletRequest request) {
+    public Map getList(@Param("stuName") String stuName, @RequestParam(value = "pageOffset",required = false) Integer pageOffset,
+                       @RequestParam(value = "pageSize",required = false) Integer pageSize , Model model, HttpServletRequest request) {
 
-        String stuName1 = request.getParameter("stuName");
+
+        //if (pageOffset==null){pageOffset=0;}
+        //String stuName1 = request.getParameter("stuName");
 
         PageBean pageBean = new PageBean();
 
@@ -46,7 +48,6 @@ public class RecodeController {
         map.put("total", pageBean.getTotal());
 
         map.put("rows", pageBean.getRows());
-
 
         return map;
 

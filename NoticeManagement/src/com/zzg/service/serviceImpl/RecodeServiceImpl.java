@@ -20,9 +20,12 @@ public class RecodeServiceImpl implements RecodeService {
 
         //int start=(pageBean.getCurrentPage()-1)*pageBean.getPageSize();
 
+        Integer count = recodeMapper.getCount(name);
+
+        if (pageBean.getPageSize()==null){pageBean.setPageSize(count);pageBean.setCurrentPage(0);}
+
         List<Map> list=recodeMapper.getList(name,pageBean.getCurrentPage(),pageBean.getPageSize());
 
-        Integer count = recodeMapper.getCount(name);
 
         pageBean.setTotal(count);
 
